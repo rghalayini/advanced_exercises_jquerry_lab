@@ -1,4 +1,8 @@
-function domSearch() {
+function domSearch(select, isCaseSensitive) {
+    let container = $(select)
+
+    // add class to the main div #content, which is the container
+    container.addClass("items_controls");
 
     //create new 3 divs: add, search, and result
     var add_controls = $('<div>');
@@ -10,25 +14,27 @@ function domSearch() {
     search_controls.addClass("search_controls");
     result_controls.addClass("result_controls");
 
-    // add class to the main div #content
-    $('#content').addClass("items_controls");
+
 
     //add the input to the add and search controls
     add_controls.append('<lable>Enter text: <input>');
-    search_controls.append('<lable>Search: <input>');
+    search_controls.append($('<lable>')
+        .text('Search: ')
+        .append($('<input>')
+            .on('input', searchList)));
 
-    //add the button to the add and search contorls
+    //add the button to the add controls
     add_controls.append($('<a>')
         .addClass("button")
         .css("display", "inline-block")
         .text("Add")
         .on("click", addToList));
 
-    search_controls.append($('<a>')
-        .addClass("button")
-        .css("display", "inline-block")
-        .text("Add")
-        .on("click", searchList));
+    // search_controls.append($('<a>')
+    //     .addClass("button")
+    //     .css("display", "inline-block")
+    //     .text("Add")
+    //     .on("click", searchList));
 
 
     //create the list <ul> to be appended to result-controls and create their class
@@ -46,21 +52,39 @@ function domSearch() {
 
     //entering text
     function addToList() {
-        let text = $('.add-controls label input').val();
+        let text = $('.add_controls lable input').val();
         let list_item = $('<li>');
 
         list_item.addClass("list-item");
-        list_item.append('<a class="button">X</a>');
+        list_item.append($('<a>')
+            .addClass('button')
+            .text('X')
+            .on('click', deleteList));
         list_item.append(`<strong>${text}</strong>`);
 
         list_item.appendTo(items_list);
-    };
-
-    //searching text
-    function searchList() {
-
+        $('.add_controls lable input').val("");
     }
 
+    //delete function
+    function deleteList() {
+        $(this).parent().remove();
+    }
 
+    //search function
+    function searchList() {
+        let searchText = $('.search_controls lable input').val();
 
-}
+        if (isCaseSensitive) {
+            $('.list-item strong')
+                .toArray()
+                .filter(item => item.textContent.indexOf(searchText) === -1)
+                .forEach(item => item.parentNode.style.color = "red");
+        } else {
+            $('.list-item strong')
+                .toArray()
+                .filter(item => item.textContent.toLowerCase().indexOf(searchText.toLowerCase()) === -1)
+                .forEach(item => item.parentNode.style.color = "red");
+        }
+    };
+};

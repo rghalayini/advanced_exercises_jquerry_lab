@@ -37,8 +37,3 @@ function wikiParser(selector) {
         return input;
     }
 }
-
-// =Document title= ==First segment== 
-// '''bold 1''' word ''italics 1'' '''bold2''' [[hyper first]] 
-// '''Bold three''' ''italics2''' word [[hyper2]] [[hyperlink2|with Label]] 
-// ==Second segment== ===Third segment=== word '''word'''[[pipe|bomb]]
